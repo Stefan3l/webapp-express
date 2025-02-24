@@ -7,13 +7,25 @@ const { PORT } = process.env;
 const moviesRouter = require("./routers/moviesRouter");
 
 // Middlewares
+const routeNotFound = require("./middleware/routeNotFound");
+const errorHandler = require("./middleware/errorsHandler");
+
 app.use(express.static("public"));
-app.use("/movies", moviesRouter);
-app.use(cors());
 app.use(express.json());
+app.use("/movies", moviesRouter);
+app.use(
+  cors({
+    origin: process.env.FE_URL,
+  })
+);
 
 // Routes
-// Import middleware to handle errors (404) (500)
+
+// Middleware error 500
+app.use(errorHandler);
+
+// Middleware error 404
+app.use(routeNotFound);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

@@ -44,6 +44,10 @@ const show = (req, res) => {
 
     const movie = results[0];
 
+    if (!movie) {
+      return res.status(404).json({ error: "Movie Not Found" });
+    }
+
     connection.execute(reviewsSql, [id], (err, results) => {
       if (err)
         return res.status(500).json({
