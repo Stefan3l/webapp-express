@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Stefan3l/webapp-express#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
   }
 }

@@ -3,7 +3,12 @@ const app = express();
 const cors = require("cors");
 const { PORT } = process.env;
 
+// Routes
+const moviesRouter = require("./routers/moviesRouter");
+
 // Middlewares
+app.use(express.static("public"));
+app.use("/movies", moviesRouter);
 app.use(cors());
 app.use(express.json());
 
