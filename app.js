@@ -10,14 +10,14 @@ const moviesRouter = require("./routers/moviesRouter");
 const routeNotFound = require("./middleware/routeNotFound");
 const errorHandler = require("./middleware/errorsHandler");
 
-app.use(express.static("public"));
-app.use(express.json());
-app.use("/movies", moviesRouter);
 app.use(
   cors({
     origin: process.env.FE_URL,
   })
 );
+app.use(express.static("public"));
+app.use(express.json());
+app.use("/movies", moviesRouter);
 
 // Routes
 
