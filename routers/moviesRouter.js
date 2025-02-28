@@ -12,6 +12,10 @@ router.get("/", moviesControllers.index);
 
 router.get("/:id", moviesControllers.show);
 
+// STORE
+
+router.post("/:id/reviews", moviesControllers.storeReview);
+
 // DELETE
 
 module.exports = router;

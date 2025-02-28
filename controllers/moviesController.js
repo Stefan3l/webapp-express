@@ -1,5 +1,4 @@
 // DATABASE
-
 const connection = require("../data/db");
 
 // INDEX
@@ -31,9 +30,11 @@ const index = (req, res) => {
 
 const show = (req, res) => {
   const movieSql = `
-    SELECT *
-    FROM movies
-    WHERE movies.id = ?`;
+        SELECT movies.* , ROUND(AVG(reviews.vote),1)  AS  avg_vote
+        FROM movies
+        LEFT JOIN reviews ON  reviews.movie_id = movies.id
+        WHERE movies.id = ?
+        GROUP BY movies.id`;
 
   const reviewsSql = `
     SELECT *
@@ -69,4 +70,32 @@ const show = (req, res) => {
   });
 };
 
-module.exports = { index, show };
+// STORE Review
+
+const storeReview = (req, res) => {
+  // Recupero ID
+  const { id } = req.params;
+
+  //Recupero il body della richiesta
+  const { name, vote, text } = req.body;
+
+  // Preparare la query
+  const sqlReview = `
+  INSERT INTO reviews (movie_id, name, vote, text)
+  VALUE (?, ? , ? , ?)
+  `;
+  // Eseguire la query
+
+  connection.execute(sqlReview, [id, name, vote, text], (err, results) => {
+    if (err)
+      return res.status(500).json({
+        error: "Database query failed",
+        message: `Database query failed: ${sqlReview}`,
+      });
+  });
+
+  // restituire la risposta al client
+  res.status(201).json({ id: results.insertId });
+};
+
+module.exports = { index, show, storeReview };
