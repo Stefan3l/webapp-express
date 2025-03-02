@@ -92,10 +92,38 @@ const storeReview = (req, res) => {
         error: "Database query failed",
         message: `Database query failed: ${sqlReview}`,
       });
+    // restituire la risposta al client
+    res.status(201).json({ id: results.insertId });
   });
-
-  // restituire la risposta al client
-  res.status(201).json({ id: results.insertId });
 };
 
-module.exports = { index, show, storeReview };
+// Store Movies
+
+const storeMovie = (req, res) => {
+  // Recupero il nome dell'immagine caricata
+  const image = req.file.originalname;
+
+  // Recuperiamo il body della richiesta
+  const { title, director, genre, release_year, abstract } = req.body;
+  console.log(req.body);
+  // Preparare la query
+
+  const sqlAddMovie =
+    "INSERT INTO movies (title, director, genre, release_year, abstract, image) VALUES (?, ?, ?, ?, ?, ?)";
+
+  connection.execute(
+    sqlAddMovie,
+    [title, director, genre, release_year, abstract, image],
+    (err, results) => {
+      if (err)
+        return res.status(500).json({
+          error: "Database query failed",
+          message: `Database query failed: ${sqlAddMovie}`,
+        });
+      // restituire la risposta al client
+      res.status(201).json({ id: results.insertId });
+    }
+  );
+};
+
+module.exports = { index, show, storeReview, storeMovie };
